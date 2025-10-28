@@ -30,11 +30,12 @@ type Auth struct {
 }
 
 type Config struct {
-	DB    DBConfig
-	Redis RedisConfig
-	App   AppConfig
-	Twill *Twillow
-	Key   *Auth
+	DB      DBConfig
+	Redis   RedisConfig
+	App     AppConfig
+	Twill   *Twillow
+	Key     *Auth
+	Fserver string
 }
 
 var (
@@ -72,6 +73,7 @@ func LoadEnv() *Config {
 			Key: &Auth{
 				key: os.Getenv("SECRATE_KEY"),
 			},
+			Fserver: os.Getenv("F_SERVER"),
 		}
 
 		log.Println("Environment variables loaded successfully")

@@ -46,10 +46,11 @@ func main() {
 
 	//attach Handler services
 	handlerFunc := handler.NewHandlerAttach(twillowHandler, redishHandler, queryHandler)
+	env := config.LoadEnv()
 
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"},
+		AllowOrigins:     []string{env.Fserver},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Authorization", "token"},
@@ -60,7 +61,7 @@ func main() {
 	app := router.NewEngineRout(r, handlerFunc)
 	app.Routes()
 
-	if err := r.Run(config.LoadEnv().GetAppPort()); err != nil {
+	if err := r.Run(env.GetAppPort()); err != nil {
 		log.Fatalf("failed to create server")
 	}
 }
