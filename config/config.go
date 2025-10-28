@@ -14,7 +14,7 @@ type DBConfig struct {
 }
 
 type RedisConfig struct {
-	Addr, Password, DB, RedisHost string
+	ConnStr string
 }
 
 type AppConfig struct {
@@ -59,10 +59,7 @@ func LoadEnv() *Config {
 				SSLMode:  os.Getenv("DB_SSLMODE"),
 			},
 			Redis: RedisConfig{
-				Addr:      os.Getenv("REDIS_ADDR"),
-				Password:  os.Getenv("REDIS_PASSWORD"),
-				DB:        os.Getenv("REDIS_DB"),
-				RedisHost: os.Getenv("REDIS_HOST"),
+				ConnStr: os.Getenv("REDISH_ADDRESS"),
 			},
 			App: AppConfig{
 				Port: os.Getenv("APP_PORT"),

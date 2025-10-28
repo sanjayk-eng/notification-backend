@@ -4,13 +4,12 @@ import (
 	"context"
 	"fmt"
 	"sanjay/config"
-	"strconv"
 
 	"github.com/redis/go-redis/v9"
 )
 
 func RedisEnvCheck(r *config.RedisConfig) bool {
-	if r.Addr == "" || r.Addr == "" || r.Password == "" || r.RedisHost == "" {
+	if r.ConnStr == " " {
 		return false
 	}
 	return true
@@ -21,16 +20,12 @@ func CheckRedisConnection(conn *redis.Client) error {
 }
 
 func NewRedisConnection() (*redis.Client, error) {
-	r := config.LoadEnv().GetRedis()
-	if exits := RedisEnvCheck(r); !exits {
+	addr := config.LoadEnv().GetRedis()
+	if exits := RedisEnvCheck(addr); !exits {
 		return nil, fmt.Errorf("Redis Env  variable missing")
 	}
-	db, _ := strconv.Atoi(r.DB)
-	clint := redis.NewClient(&redis.Options{
-		Addr:     fmt.Sprintf("%s:%s", r.RedisHost, r.Addr),
-		Password: r.Password,
-		DB:       db,
-	})
+	opt, _ := redis.ParseURL(addr.ConnStr)
+	clint := redis.NewClient(opt)
 	err := CheckRedisConnection(clint)
 	return clint, err
 }
